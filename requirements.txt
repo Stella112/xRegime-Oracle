@@ -1,0 +1,11 @@
+streamlit
+langgraph
+langchain
+langchain-core
+openai
+speechmatics-python
+pandas
+python-dotenv
+yfinance
+audio-recorder-streamlit
+eth-account

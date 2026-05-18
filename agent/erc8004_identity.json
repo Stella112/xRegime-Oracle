@@ -1,0 +1,17 @@
+{
+    "agentAddress": "0xEe4B45c781c2de6F79372Ad05208f36C124e4224",
+    "name": "xRegime Oracle",
+    "standard": "ERC-8004 (Trustless Agents)",
+    "capabilities": [
+        "Financial Analysis",
+        "Speech-to-Text",
+        "Kraken Execution"
+    ],
+    "modelEnsemble": [
+        "Qwen-7B",
+        "Qwen-72B",
+        "Mixtral-8x7B"
+    ],
+    "reputationSource": "Dynamic Regime Score",
+    "verificationProtocol": "Featherless Consensus (2/3 Vote)"
+}

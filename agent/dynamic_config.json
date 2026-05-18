@@ -1,0 +1,6 @@
+{
+  "risk_tolerance": "medium",
+  "stop_loss_percentage": 0.05,
+  "momentum_threshold": 0.6,
+  "special_instructions": "Default. Maintain standard risk levels."
+}
