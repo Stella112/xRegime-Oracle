@@ -8,6 +8,8 @@ class AgentState(TypedDict):
     analysis_results: Dict[str, Any]
     backtest_results: Dict[str, Any]
     execution_plan: Optional[str]
+    execution_output: Optional[str]
+    execution_ok: Optional[bool]
     status: str
     
     # Nightly Reflection Workflow

@@ -9,8 +9,8 @@
     ],
     "modelEnsemble": [
         "Qwen-7B",
-        "Qwen-72B",
-        "Mixtral-8x7B"
+        "Qwen-2.5-7B",
+        "Llama-3.1-8B"
     ],
     "reputationSource": "Dynamic Regime Score",
     "verificationProtocol": "Featherless Consensus (2/3 Vote)"

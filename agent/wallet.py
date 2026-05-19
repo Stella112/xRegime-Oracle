@@ -29,8 +29,8 @@ def get_or_create_wallet():
         "agentAddress": address,
         "name": "xRegime Oracle",
         "standard": "ERC-8004 (Trustless Agents)",
-        "capabilities": ["Financial Analysis", "Speech-to-Text", "Kraken Execution"],
-        "modelEnsemble": ["Qwen-7B", "Qwen-72B", "Mixtral-8x7B"],
+        "capabilities": ["Crypto Market Analysis", "Speech-to-Text", "Kraken Paper Execution"],
+        "modelEnsemble": ["Qwen-7B", "Qwen-2.5-7B", "Llama-3.1-8B"],
         "reputationSource": "Dynamic Regime Score",
         "verificationProtocol": "Featherless Consensus (2/3 Vote)"
     }

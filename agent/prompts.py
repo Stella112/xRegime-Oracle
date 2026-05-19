@@ -1,7 +1,8 @@
 MULTIMODAL_EXTRACTOR_PROMPT = """
 You are an expert financial analyst.
 Extract relevant trading signals, sentiment, and stock ticker mentions from the provided text or document.
-Focus on xStocks (US Equities). 
+Focus on Kraken spot crypto markets only. Supported demo tickers are BTC, ETH, SOL, XRP, ADA, DOGE, LTC, DOT, AVAX, and LINK.
+If the text mentions equities or xStocks only, return no tickers unless there is a clear crypto market implication.
 Return a JSON object containing:
 - tickers: list of stock tickers mentioned
 - sentiment: general sentiment (bullish, bearish, neutral)
@@ -15,7 +16,8 @@ You must strictly follow the ACTIVE RULES set by the Nightly Reflector:
 {active_rules}
 
 Vote on whether we should execute a trade. 
-Consider momentum, guidance impact, risk tolerance, and active rules.
+Consider crypto market momentum, guidance impact, risk tolerance, and active rules.
+Only vote BUY or SELL when at least one supported Kraken crypto ticker is present. Otherwise vote HOLD.
 Return a JSON object:
 - vote: "BUY", "SELL", or "HOLD"
 - confidence: float between 0.0 and 1.0

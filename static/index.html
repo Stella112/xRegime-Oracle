@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>xRegime Oracle</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #070b10;
+  --panel: rgba(15, 23, 42, .82);
+  --panel-strong: rgba(15, 23, 42, .95);
+  --line: rgba(148, 163, 184, .18);
+  --muted: #94a3b8;
+  --text: #f8fafc;
+  --teal: #14b8a6;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --blue: #38bdf8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+    radial-gradient(circle at 18% 0%, rgba(20,184,166,.18), transparent 34rem),
+    radial-gradient(circle at 88% 6%, rgba(245,158,11,.11), transparent 30rem),
+    linear-gradient(180deg, #070b10 0%, #111827 48%, #070b10 100%);
+  background-size: 28px 28px, 28px 28px, auto, auto, auto;
+}
+button, input, textarea { font: inherit; }
+button, label { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(7, 11, 16, .88);
+  backdrop-filter: blur(16px);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(20,184,166,.42);
+  border-radius: 8px;
+  background: rgba(20,184,166,.12);
+  color: #99f6e4;
+  font-family: "JetBrains Mono", monospace;
+}
+.mini-label { color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.nav-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: end; }
+.nav-link, .secondary-btn {
+  border: 1px solid var(--line);
+  background: rgba(15,23,42,.64);
+  color: #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 12px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 800;
+}
+.nav-link:hover, .secondary-btn:hover { border-color: rgba(20,184,166,.50); color: #ecfeff; }
+.nav-link.active { border-color: rgba(20,184,166,.62); background: rgba(20,184,166,.12); color: #f8fafc; }
+.nav-number {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  border-radius: 5px;
+  background: rgba(20,184,166,.14);
+  color: #99f6e4;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+}
+.live { display: inline-flex; align-items: center; gap: 7px; color: #cbd5e1; font-size: 13px; }
+.dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 16px rgba(34,197,94,.55); }
+.shell { max-width: 1240px; margin: 0 auto; padding: 26px 22px 70px; }
+.view { display: none; }
+.view.active { display: block; animation: rise .22s ease; }
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
+  gap: 18px;
+  align-items: stretch;
+}
+.panel, .hero-copy, .verdict-card, .metric, .step-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: 0 18px 60px rgba(0,0,0,.24);
+}
+.hero-copy { padding: 26px; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; }
+.kicker {
+  color: #5eead4;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+h1 { font-size: clamp(34px, 5vw, 64px); line-height: .98; letter-spacing: 0; margin: 14px 0 14px; }
+.hero-copy p, .panel-subtitle, .event-body, .notice { color: #cbd5e1; line-height: 1.58; }
+.chip-row, .asset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip, .asset-chip {
+  border: 1px solid rgba(148,163,184,.20);
+  border-radius: 999px;
+  color: #e2e8f0;
+  background: rgba(30,41,59,.66);
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.asset-chip { border-radius: 6px; font-family: "JetBrains Mono", monospace; }
+.verdict-card { padding: 22px; display: flex; flex-direction: column; justify-content: space-between; }
+.verdict-title { font-size: 30px; line-height: 1.05; font-weight: 800; margin: 10px 0; }
+.verdict-copy { color: #cbd5e1; line-height: 1.55; overflow-wrap: anywhere; }
+.verdict-status { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mini-value { margin-top: 4px; font-weight: 800; color: #f8fafc; overflow-wrap: anywhere; }
+.front-metrics, .route-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+.front-metric {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(15,23,42,.76);
+  padding: 14px;
+  border-left: 4px solid var(--teal);
+}
+.front-metric:nth-child(2) { border-left-color: var(--green); }
+.front-metric:nth-child(3) { border-left-color: var(--amber); }
+.front-metric:nth-child(4) { border-left-color: var(--red); }
+.front-metric strong {
+  display: block;
+  font-size: 26px;
+  line-height: 1.1;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+.front-metric span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.step-card { padding: 14px; min-height: 96px; }
+.step-card b { display: block; margin: 6px 0 5px; }
+.step-card span { color: #cbd5e1; font-size: 13px; line-height: 1.45; }
+.panel { padding: 18px; }
+.panel-head { display: flex; align-items: start; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+.panel-title { font-size: 22px; font-weight: 800; margin: 4px 0; }
+.trade-grid { display: grid; grid-template-columns: minmax(360px, .95fr) minmax(320px, .75fr); gap: 18px; align-items: start; margin-top: 18px; }
+.mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+.mode {
+  border: 1px solid var(--line);
+  background: rgba(15,23,42,.78);
+  color: #e2e8f0;
+  border-radius: 8px;
+  padding: 13px;
+  text-align: left;
+}
+.mode strong { display: block; margin-bottom: 4px; font-size: 17px; }
+.mode span { color: var(--muted); font-size: 12px; line-height: 1.35; }
+.mode.active { border-color: rgba(20,184,166,.62); background: rgba(20,184,166,.10); }
+.mode.disabled { opacity: .68; border-style: dashed; }
+textarea {
+  width: 100%;
+  min-height: 170px;
+  resize: vertical;
+  border: 1px solid rgba(148,163,184,.22);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(2,6,23,.72);
+  padding: 14px;
+  line-height: 1.55;
+  outline: none;
+}
+textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(20,184,166,.10); }
+.input-actions, .file-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.primary-btn {
+  border: 0;
+  border-radius: 8px;
+  min-height: 48px;
+  padding: 12px 16px;
+  color: #061018;
+  font-weight: 900;
+  background: linear-gradient(135deg, #5eead4, #22c55e);
+}
+.primary-btn:disabled { opacity: .55; cursor: wait; }
+.file-label {
+  display: block;
+  text-align: center;
+  border: 1px solid rgba(20,184,166,.34);
+  border-radius: 8px;
+  padding: 13px;
+  color: #ecfeff;
+  background: rgba(20,184,166,.10);
+  font-weight: 900;
+  cursor: pointer;
+}
+.file-label input, .hidden { display: none !important; }
+.notice {
+  border: 1px solid rgba(245,158,11,.30);
+  border-radius: 8px;
+  color: #fde68a;
+  background: rgba(245,158,11,.08);
+  padding: 12px;
+  font-size: 13px;
+  margin-top: 12px;
+}
+.status {
+  display: none;
+  margin-top: 12px;
+  border: 1px solid rgba(56,189,248,.30);
+  border-radius: 8px;
+  color: #bae6fd;
+  background: rgba(56,189,248,.08);
+  padding: 12px;
+  font-weight: 800;
+}
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(56,189,248,.25);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+.metric { padding: 14px; border-left: 4px solid var(--teal); }
+.metric:nth-child(2) { border-left-color: var(--green); }
+.metric:nth-child(3) { border-left-color: var(--amber); }
+.metric:nth-child(4) { border-left-color: var(--red); }
+.metric strong { display: block; font-size: 26px; margin-top: 5px; }
+.timeline { display: grid; gap: 10px; }
+.event {
+  display: none;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--teal);
+  border-radius: 8px;
+  background: rgba(15,23,42,.66);
+  padding: 14px;
+}
+.event.show { display: block; animation: rise .22s ease; }
+.event-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.event-title b { font-size: 16px; }
+.mono { font-family: "JetBrains Mono", monospace; }
+.vote-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.vote-box { border: 1px solid rgba(148,163,184,.16); border-radius: 8px; padding: 10px; background: rgba(2,6,23,.55); }
+.terminal, .code-block {
+  border: 1px solid rgba(34,197,94,.22);
+  border-radius: 8px;
+  background: #020617;
+  color: #86efac;
+  padding: 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.ledger-row { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(148,163,184,.12); }
+.security-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.security-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(15,23,42,.72);
+  padding: 16px;
+  min-height: 132px;
+}
+.security-card strong {
+  display: block;
+  font-size: 18px;
+  margin: 8px 0 6px;
+}
+.security-card span {
+  color: #cbd5e1;
+  line-height: 1.48;
+  font-size: 13px;
+}
+.security-ok { color: #86efac; }
+.security-warn { color: #fde68a; }
+.system-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 18px; }
+@media (max-width: 980px) {
+  .hero, .trade-grid, .section-grid, .security-grid, .system-grid { grid-template-columns: 1fr; }
+  .front-metrics, .route-cards, .metrics { grid-template-columns: repeat(2, 1fr); }
+  .topbar { align-items: start; flex-direction: column; }
+  .nav-actions { justify-content: start; }
+}
+@media (max-width: 620px) {
+  .shell { padding: 18px 12px 56px; }
+  .hero-copy { padding: 20px; }
+  .mode-grid, .input-actions, .file-row, .vote-grid, .verdict-status, .front-metrics, .route-cards, .metrics { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">XO</div>
+    <div>
+      <div>xRegime Oracle</div>
+      <div class="mini-label">Kraken crypto paper console</div>
+    </div>
+  </div>
+  <nav class="nav-actions">
+    <button class="nav-link active" data-view-button="trade" onclick="showView('trade')"><span class="nav-number">1</span>Trade</button>
+    <button class="nav-link" data-view-button="proof" onclick="showView('proof')"><span class="nav-number">2</span>Proof</button>
+    <button class="nav-link" data-view-button="portfolio" onclick="showView('portfolio')"><span class="nav-number">3</span>Portfolio</button>
+    <button class="nav-link" data-view-button="security" onclick="showView('security')"><span class="nav-number">4</span>Security</button>
+    <button class="nav-link" data-view-button="system" onclick="showView('system')"><span class="nav-number">5</span>System</button>
+    <span class="live"><span class="dot"></span>Regime <b id="navScore">50.0</b></span>
+  </nav>
+</header>
+
+<main class="shell">
+  <section class="view active" id="view-trade">
+    <div class="hero">
+      <div class="hero-copy">
+        <div>
+          <div class="kicker">Trade cockpit</div>
+          <h1>One brief in. One clear decision out.</h1>
+          <p>Start with text, an uploaded voice note, or live mic when HTTPS is enabled. xRegime shows the verdict here, then stores the detailed proof in its own page.</p>
+        </div>
+        <div class="chip-row">
+          <span class="chip">Crypto only</span>
+          <span class="chip">Paper trading</span>
+          <span class="chip">2-of-3 model consensus</span>
+          <span class="chip">Risk-gated</span>
+        </div>
+      </div>
+      <aside class="verdict-card" id="verdictCard">
+        <div>
+          <div class="kicker">Live verdict</div>
+          <div class="verdict-title" id="verdictTitle">Ready to analyze</div>
+          <div class="verdict-copy" id="verdictCopy">Use sample, upload audio, or paste a crypto update. Results stay simple here; details live under Proof.</div>
+        </div>
+        <div class="verdict-status">
+          <div><div class="mini-label">Consensus</div><div class="mini-value" id="consensusMini">Waiting</div></div>
+          <div><div class="mini-label">Kraken action</div><div class="mini-value" id="actionMini">No order sent</div></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="front-metrics" aria-label="Front page performance metrics">
+      <div class="front-metric">
+        <div class="mini-label">Regime Score</div>
+        <strong id="frontRegime">50.0</strong>
+        <span>current risk posture</span>
+      </div>
+      <div class="front-metric">
+        <div class="mini-label">Paper PnL</div>
+        <strong id="frontPnl">$0.00</strong>
+        <span>from app-tracked trades</span>
+      </div>
+      <div class="front-metric">
+        <div class="mini-label">Trades</div>
+        <strong id="frontTrades">0</strong>
+        <span>Kraken paper executions</span>
+      </div>
+      <div class="front-metric">
+        <div class="mini-label">Win Rate</div>
+        <strong id="frontWin">N/A</strong>
+        <span>positive PnL trades</span>
+      </div>
+    </div>
+
+    <div class="route-cards">
+      <div class="step-card"><div class="mini-label">Step 1</div><b>Give brief</b><span>Text, sample, or uploaded voice.</span></div>
+      <div class="step-card"><div class="mini-label">Step 2</div><b>Models vote</b><span>Consensus must form before action.</span></div>
+      <div class="step-card"><div class="mini-label">Step 3</div><b>Risk gate</b><span>Dynamic rules approve or block.</span></div>
+      <div class="step-card"><div class="mini-label">Step 4</div><b>Paper order</b><span>Kraken receives tiny crypto trades.</span></div>
+    </div>
+
+    <div class="trade-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="kicker">Command center</div>
+            <div class="panel-title">Start here</div>
+            <div class="panel-subtitle">Upload voice is the reliable path on this HTTP IP. Live mic will work after HTTPS is added.</div>
+          </div>
+        </div>
+        <div class="mode-grid">
+          <button class="mode active" onclick="focusBrief()"><strong>Type</strong><span>Paste a crypto update</span></button>
+          <button class="mode" id="recordBtn" onclick="toggleRecording()"><strong>Live mic</strong><span id="recordHint">Needs HTTPS on this IP</span></button>
+          <label class="mode" for="voiceUpload"><strong>Upload voice</strong><span>WAV, MP3, M4A, WEBM</span></label>
+        </div>
+        <input id="voiceUpload" class="hidden" type="file" accept="audio/*,.wav,.mp3,.m4a,.webm" onchange="uploadAudio(this)" />
+        <textarea id="brief" placeholder="Example: BTC broke above resistance after ETF inflows accelerated. Momentum is bullish, volatility is elevated, and spot demand is strong."></textarea>
+        <div class="asset-row" aria-label="Supported markets">
+          <span class="asset-chip">BTC</span><span class="asset-chip">ETH</span><span class="asset-chip">SOL</span><span class="asset-chip">XRP</span><span class="asset-chip">ADA</span>
+          <span class="asset-chip">DOGE</span><span class="asset-chip">LTC</span><span class="asset-chip">DOT</span><span class="asset-chip">AVAX</span><span class="asset-chip">LINK</span>
+        </div>
+        <div class="input-actions">
+          <button class="secondary-btn" onclick="useSample()">Load BTC sample</button>
+          <button class="primary-btn" id="runBtn" onclick="runAgent()">Analyze and Execute</button>
+        </div>
+        <div class="file-row">
+          <label class="file-label" for="voiceUpload">Upload voice file</label>
+          <button class="secondary-btn" onclick="showView('proof')">Open Proof Trail</button>
+        </div>
+        <div class="notice" id="micNotice">Live browser recording requires HTTPS on a public IP. Until SSL is added, use Upload voice file; transcription still runs through Speechmatics.</div>
+        <div class="status" id="statusBar"><span class="spinner"></span><span id="statusMsg">Running...</span></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="kicker">Latest proof preview</div>
+            <div class="panel-title" id="previewTitle">No run yet</div>
+            <div class="panel-subtitle" id="previewText">After analysis, the latest input, vote, risk verdict, and execution summary will appear here.</div>
+          </div>
+        </div>
+        <button class="secondary-btn" onclick="showView('proof')">Review full proof trail</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-proof">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="kicker">Proof trail</div>
+          <div class="panel-title">What happened and why</div>
+          <div class="panel-subtitle">This page is only the forensic timeline. No portfolio cards, no command controls.</div>
+        </div>
+        <button class="secondary-btn" onclick="showView('trade')">Back to trade</button>
+      </div>
+      <div class="timeline">
+        <article class="event" id="evInput"><div class="event-title"><b>Input captured</b><span class="mini-label">Step 1</span></div><div class="event-body mono" id="inputText">Waiting for a brief.</div></article>
+        <article class="event" id="evSignals"><div class="event-title"><b>Signals extracted</b><span class="mini-label">Step 2</span></div><div class="event-body" id="signalsText">Waiting for signals.</div></article>
+        <article class="event" id="evCourt"><div class="event-title"><b>Model courtroom</b><span class="mini-label">Step 3</span></div><div class="vote-grid" id="voteGrid"></div><div class="event-body" id="courtText" style="margin-top:10px;"></div></article>
+        <article class="event" id="evRisk"><div class="event-title"><b>Risk judge</b><span class="mini-label">Step 4</span></div><div class="event-body" id="riskText">Waiting for risk verdict.</div></article>
+        <article class="event" id="evExec"><div class="event-title"><b>Kraken execution</b><span class="mini-label">Step 5</span></div><div class="terminal mono" id="execText">No command yet.</div></article>
+        <article class="event" id="evReflect"><div class="event-title"><b>Self-evolution</b><span class="mini-label">Reflector</span></div><div class="event-body" id="reflectText">Nightly reflector has not run in this session.</div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-portfolio">
+    <div class="section-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="kicker">Portfolio</div>
+            <div class="panel-title">Paper performance</div>
+            <div class="panel-subtitle">Only trading outcomes live here.</div>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="mini-label">Regime</div><strong id="mRegime">50.0</strong></div>
+          <div class="metric"><div class="mini-label">Win Rate</div><strong id="mWin">N/A</strong></div>
+          <div class="metric"><div class="mini-label">Trades</div><strong id="mTrades">0</strong></div>
+          <div class="metric"><div class="mini-label">Last PnL</div><strong id="mLast">0.00</strong></div>
+        </div>
+        <canvas id="chart" height="130"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><div class="kicker">Ledger</div><div class="panel-title">Recent trades</div></div>
+        </div>
+        <div id="ledger" class="event-body">No app-tracked trades yet.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-security">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="kicker">Security layer</div>
+          <div class="panel-title">Guardrails before any Kraken command</div>
+          <div class="panel-subtitle">This page makes the trading safety story visible for judges and users.</div>
+        </div>
+        <button class="secondary-btn" onclick="showView('trade')">Back to trade</button>
+      </div>
+      <div class="security-grid">
+        <div class="security-card">
+          <div class="mini-label security-ok">Mode lock</div>
+          <strong>Paper trading only</strong>
+          <span>Execution is presented as Kraken paper mode. Live trading and withdrawals are not part of the demo flow.</span>
+        </div>
+        <div class="security-card">
+          <div class="mini-label security-ok">Asset allowlist</div>
+          <strong>Crypto pairs only</strong>
+          <span>Supported markets are BTC, ETH, SOL, XRP, ADA, DOGE, LTC, DOT, AVAX, and LINK.</span>
+        </div>
+        <div class="security-card">
+          <div class="mini-label security-ok">Order sizing</div>
+          <strong>Tiny paper orders</strong>
+          <span>Orders use small preset sizes so demo execution cannot create outsized paper exposure.</span>
+        </div>
+        <div class="security-card">
+          <div class="mini-label security-warn">Model gate</div>
+          <strong>Consensus required</strong>
+          <span>A single model cannot trade alone. The model courtroom needs agreement before the risk judge can approve.</span>
+        </div>
+        <div class="security-card">
+          <div class="mini-label security-warn">Risk gate</div>
+          <strong>Regime blocks weak signals</strong>
+          <span>The dynamic Regime Score and current rules can block a trade even after a BUY consensus.</span>
+        </div>
+        <div class="security-card">
+          <div class="mini-label security-ok">Auditability</div>
+          <strong>Every decision is replayable</strong>
+          <span>The Proof page records input, signals, votes, risk verdict, and execution output for review.</span>
+        </div>
+      </div>
+      <div class="notice">Recommended next backend upgrade: add a hard safety gate that rejects non-paper Kraken commands, prompt-injection phrases, unsupported pairs, and trades inside a cooldown window before subprocess execution.</div>
+    </div>
+  </section>
+
+  <section class="view" id="view-system">
+    <div class="system-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div><div class="kicker">System</div><div class="panel-title">Controls</div><div class="panel-subtitle">Identity and adaptive rules are isolated here.</div></div>
+        </div>
+        <button class="secondary-btn" onclick="runReflector()">Run Nightly Reflector</button>
+        <button class="secondary-btn" onclick="toggleId()" style="margin-left:8px;">Toggle Agent Identity</button>
+        <div class="notice">Reflector can update dynamic risk rules. It does not change the crypto-only Kraken paper mode.</div>
+        <div id="idCard" class="code-block mono" style="display:none;margin-top:12px;">Loading wallet...</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><div class="kicker">Active rules</div><div class="panel-title">Dynamic config</div></div>
+        </div>
+        <pre class="code-block mono" id="rulesBlock">Loading...</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const SAMPLE = "BTC broke above a key resistance level after ETF inflows accelerated. Momentum remains positive, volatility is elevated, and traders are watching whether spot demand can hold into the next session.";
+let chart = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[ch]));
+}
+
+function showView(name) {
+  document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
+  document.getElementById("view-" + name).classList.add("active");
+  document.querySelectorAll("[data-view-button]").forEach(button => button.classList.toggle("active", button.dataset.viewButton === name));
+  history.replaceState(null, "", "#" + name);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function focusBrief() {
+  showView("trade");
+  document.getElementById("brief").focus();
+}
+
+function useSample() {
+  document.getElementById("brief").value = SAMPLE;
+  setVerdict("Sample loaded", "Review it, then run analysis. This sample is BTC-only and safe for Kraken crypto paper mode.", "Waiting", "No order sent", "hold");
+  updatePreview("Sample loaded", "BTC sample is ready in the command box.");
+}
+
+function toggleId() {
+  const card = document.getElementById("idCard");
+  card.style.display = card.style.display === "block" ? "none" : "block";
+}
+
+function setStatus(message, show) {
+  document.getElementById("statusMsg").textContent = message;
+  document.getElementById("statusBar").style.display = show ? "block" : "none";
+}
+
+function updatePreview(title, text) {
+  document.getElementById("previewTitle").textContent = title;
+  document.getElementById("previewText").textContent = text;
+}
+
+function setVerdict(title, copy, consensus, action, tone) {
+  document.getElementById("verdictTitle").textContent = title;
+  document.getElementById("verdictCopy").textContent = copy;
+  document.getElementById("consensusMini").textContent = consensus;
+  document.getElementById("actionMini").textContent = action;
+  const card = document.getElementById("verdictCard");
+  const color = tone === "good" ? "rgba(34,197,94,.55)" : tone === "bad" ? "rgba(239,68,68,.55)" : tone === "warn" ? "rgba(245,158,11,.55)" : "rgba(148,163,184,.18)";
+  card.style.borderColor = color;
+}
+
+function show(id) {
+  document.getElementById(id).classList.add("show");
+}
+
+function resetProof() {
+  ["evInput", "evSignals", "evCourt", "evRisk", "evExec", "evReflect"].forEach(id => document.getElementById(id).classList.remove("show"));
+  document.getElementById("voteGrid").innerHTML = "";
+  document.getElementById("execText").textContent = "No command yet.";
+}
+
+function microphoneUnavailableMessage() {
+  return "Live microphone recording is blocked because this app is loaded over HTTP on a public IP. Upload a voice file here, or enable HTTPS for live recording.";
+}
+
+function canUseMicrophone() {
+  return window.isSecureContext && navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === "function";
+}
+
+async function toggleRecording() {
+  const btn = document.getElementById("recordBtn");
+  const hint = document.getElementById("recordHint");
+  if (!canUseMicrophone()) {
+    const message = microphoneUnavailableMessage();
+    setVerdict("Use voice upload", message, "No vote", "No order sent", "warn");
+    updatePreview("Live mic needs HTTPS", "Upload voice still works and sends the file to Speechmatics.");
+    document.getElementById("micNotice").textContent = message;
+    document.getElementById("voiceUpload").click();
+    return;
+  }
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop();
+    btn.classList.remove("active");
+    hint.textContent = "Processing voice...";
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = event => {
+      if (event.data && event.data.size > 0) recordedChunks.push(event.data);
+    };
+    mediaRecorder.onstop = async () => {
+      stream.getTracks().forEach(track => track.stop());
+      const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || "audio/webm" });
+      await sendAudioBlob(blob, "voice-brief.webm");
+      hint.textContent = "Record a brief";
+    };
+    mediaRecorder.start();
+    btn.classList.add("active");
+    hint.textContent = "Recording... click to stop";
+    setVerdict("Listening", "Speak naturally. When you stop, xRegime will transcribe and run the same agent workflow.", "Voice input", "No order sent", "hold");
+  } catch (err) {
+    setVerdict("Microphone blocked", err.message || microphoneUnavailableMessage(), "No vote", "No order sent", "bad");
+  }
+}
+
+async function sendAudioBlob(blob, filename) {
+  setStatus("Transcribing voice with Speechmatics...", true);
+  setVerdict("Transcribing voice", "Speechmatics is converting your audio to text before analysis.", "Voice input", "No order sent", "hold");
+  const form = new FormData();
+  form.append("audio", blob, filename);
+  try {
+    const response = await fetch("/api/transcribe", { method: "POST", body: form });
+    const data = await response.json();
+    if (!data.transcript) throw new Error(data.error || "No transcript returned");
+    document.getElementById("brief").value = data.transcript;
+    updatePreview("Transcript ready", data.transcript);
+    setStatus("Transcript ready. Running xRegime...", true);
+    await runAgent();
+  } catch (err) {
+    setStatus("", false);
+    setVerdict("Voice upload failed", err.message, "No vote", "No order sent", "bad");
+    updatePreview("Voice upload failed", err.message);
+  }
+}
+
+async function uploadAudio(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  await sendAudioBlob(file, file.name || "voice-upload.wav");
+  input.value = "";
+}
+
+function renderFlight(log) {
+  (log || []).forEach(event => renderEvent(event));
+}
+
+function renderEvent(event) {
+  if (event.type === "ingested") {
+    show("evInput");
+    const text = event.content || "";
+    document.getElementById("inputText").textContent = text.length > 520 ? text.slice(0, 520) + "..." : text;
+    updatePreview("Input captured", text.length > 160 ? text.slice(0, 160) + "..." : text);
+  }
+  if (event.type === "signals") {
+    show("evSignals");
+    const tickers = (event.tickers || []).join(", ") || "none";
+    const sentiment = String(event.sentiment || "neutral").toUpperCase();
+    document.getElementById("signalsText").innerHTML = `<b>Tickers:</b> <span class="mono">${esc(tickers)}</span><br><b>Sentiment:</b> <span class="mono">${esc(sentiment)}</span><br>${esc(event.summary || "")}`;
+    updatePreview("Signals extracted", `${tickers} - ${sentiment}`);
+  }
+  if (event.type === "courtroom") {
+    show("evCourt");
+    const votes = event.votes || [];
+    document.getElementById("voteGrid").innerHTML = votes.map(vote => {
+      const label = vote.vote || "HOLD";
+      const color = label === "BUY" ? "#22c55e" : label === "SELL" ? "#ef4444" : "#f59e0b";
+      const conf = Number(vote.confidence || 0);
+      return `<div class="vote-box"><div class="mini-label">${esc(vote.model || "model")}</div><div style="font-size:24px;font-weight:800;color:${color};margin:5px 0;">${esc(label)}</div><div class="mini-value">${(conf * 100).toFixed(0)}% confidence</div></div>`;
+    }).join("");
+    const finalVote = event.final_vote || "HOLD";
+    document.getElementById("courtText").textContent = event.reasoning || `Final consensus: ${finalVote}`;
+    setVerdict(`Consensus: ${finalVote}`, event.reasoning || "Model courtroom completed.", finalVote, "Risk check next", finalVote === "HOLD" ? "warn" : "hold");
+    updatePreview(`Consensus: ${finalVote}`, event.reasoning || "Model courtroom completed.");
+  }
+  if (event.type === "risk_judge" || event.type === "backtested") {
+    show("evRisk");
+    const verdict = event.verdict || (event.backtest && event.backtest.status) || "CHECKED";
+    const score = Number(event.regime_score || 50);
+    const reason = (event.backtest && event.backtest.reason) || event.reason || "";
+    document.getElementById("riskText").innerHTML = `<b>Regime score:</b> ${score.toFixed(1)}/100<br><b>Verdict:</b> ${esc(verdict)}<br>${esc(reason)}`;
+    setVerdict(verdict === "APPROVED" ? "Risk approved" : "Risk blocked", reason || "Risk rules evaluated the signal.", document.getElementById("consensusMini").textContent, "Waiting for execution", verdict === "APPROVED" ? "good" : "warn");
+    updatePreview(`Risk ${verdict}`, reason || "Risk rules evaluated the signal.");
+  }
+  if (event.type === "execution") {
+    show("evExec");
+    const command = event.command || "NO_ACTION";
+    const ok = event.execution_ok !== false;
+    if (command === "NO_ACTION") {
+      document.getElementById("execText").textContent = "[xRegime] No Kraken command was sent.";
+      setVerdict("No trade sent", "The agent held position because consensus or risk rules did not approve a trade.", document.getElementById("consensusMini").textContent, "NO_ACTION", "warn");
+      updatePreview("No trade sent", "Consensus or risk rules blocked execution.");
+    } else if (ok) {
+      document.getElementById("execText").textContent = "$ " + command + "\n[xRegime] Kraken paper order filled. Simulated PnL: " + (event.pnl || "N/A") + " USD";
+      setVerdict("Paper trade executed", command, document.getElementById("consensusMini").textContent, "Order filled", "good");
+      updatePreview("Paper trade executed", command);
+    } else {
+      document.getElementById("execText").textContent = "$ " + command + "\n[Kraken] Order rejected.\n" + (event.output || "");
+      setVerdict("Kraken rejected order", event.output || "The execution layer returned an error.", document.getElementById("consensusMini").textContent, "Rejected", "bad");
+      updatePreview("Kraken rejected order", event.output || "Execution failed.");
+    }
+  }
+  if (event.type === "evolution") {
+    show("evReflect");
+    document.getElementById("reflectText").textContent = event.narrative || "Reflector updated the dynamic strategy rules.";
+  }
+}
+
+async function runAgent() {
+  const text = document.getElementById("brief").value.trim();
+  if (!text) {
+    setVerdict("Add a brief first", "Use the sample, upload audio, or type a crypto market update.", "No vote", "No order sent", "warn");
+    document.getElementById("brief").focus();
+    return;
+  }
+  resetProof();
+  showView("proof");
+  setStatus("Running xRegime Oracle...", true);
+  setVerdict("Analyzing", "Featherless models are voting and the risk judge is checking the active rules.", "In progress", "No order sent", "hold");
+  updatePreview("Analyzing", "Streaming proof trail now.");
+  document.getElementById("runBtn").disabled = true;
+  const form = new FormData();
+  form.append("text", text);
+  try {
+    const response = await fetch("/api/execute", { method: "POST", body: form });
+    if (!response.ok || !response.body) throw new Error("Agent request failed");
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const parts = buffer.split("\n\n");
+      buffer = parts.pop() || "";
+      parts.forEach(part => {
+        const line = part.split("\n").find(item => item.startsWith("data:"));
+        if (!line) return;
+        try {
+          const payload = JSON.parse(line.slice(5));
+          if (payload.error) throw new Error(payload.error);
+          renderFlight((payload.value || {}).flight_log || []);
+        } catch (err) {
+          console.warn(err);
+        }
+      });
+    }
+  } catch (err) {
+    setVerdict("Run failed", err.message, "Error", "No order sent", "bad");
+    updatePreview("Run failed", err.message);
+  } finally {
+    setStatus("", false);
+    document.getElementById("runBtn").disabled = false;
+    await loadState();
+  }
+}
+
+async function runReflector() {
+  setStatus("Running Nightly Reflector...", true);
+  try {
+    await fetch("/api/reflect", { method: "POST" });
+    await loadState();
+    setVerdict("Rules refreshed", "Nightly Reflector reviewed the latest outcomes and updated the dynamic strategy rules.", document.getElementById("consensusMini").textContent, document.getElementById("actionMini").textContent, "good");
+  } catch (err) {
+    setVerdict("Reflector failed", err.message, "No vote", "No order sent", "bad");
+  } finally {
+    setStatus("", false);
+  }
+}
+
+function initChart() {
+  const ctx = document.getElementById("chart").getContext("2d");
+  chart = new Chart(ctx, {
+    type: "line",
+    data: { labels: ["Start"], datasets: [{ data: [10000], borderColor: "#14b8a6", backgroundColor: "rgba(20,184,166,.12)", fill: true, tension: .35, pointRadius: 3, borderWidth: 2 }] },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: "rgba(148,163,184,.08)" }, ticks: { color: "#94a3b8" } },
+        y: { grid: { color: "rgba(148,163,184,.08)" }, ticks: { color: "#94a3b8", callback: value => "$" + Number(value).toLocaleString() } }
+      }
+    }
+  });
+}
+
+function updateChart(trades) {
+  if (!chart) return;
+  let balance = 10000;
+  const labels = ["Start"];
+  const data = [10000];
+  trades.forEach((trade, index) => {
+    balance += Number(trade.pnl || 0);
+    labels.push("T" + (index + 1));
+    data.push(Number(balance.toFixed(2)));
+  });
+  chart.data.labels = labels;
+  chart.data.datasets[0].data = data;
+  chart.data.datasets[0].borderColor = balance >= 10000 ? "#14b8a6" : "#ef4444";
+  chart.update();
+}
+
+async function loadState() {
+  try {
+    const data = await fetch("/api/state").then(response => response.json());
+    const trades = data.trade_log || [];
+    const score = Number(data.regime_score || 50);
+    document.getElementById("navScore").textContent = score.toFixed(1);
+    document.getElementById("frontRegime").textContent = score.toFixed(1);
+    document.getElementById("mRegime").textContent = score.toFixed(1);
+    const winRateText = data.trade_count > 0 ? data.win_rate + "%" : "N/A";
+    document.getElementById("mWin").textContent = winRateText;
+    document.getElementById("frontWin").textContent = winRateText;
+    document.getElementById("mTrades").textContent = data.trade_count || 0;
+    document.getElementById("frontTrades").textContent = data.trade_count || 0;
+    const last = trades.length ? Number(trades[trades.length - 1].pnl || 0) : 0;
+    document.getElementById("mLast").textContent = (last >= 0 ? "+" : "") + last.toFixed(2);
+    const totalPnl = trades.reduce((sum, trade) => sum + Number(trade.pnl || 0), 0);
+    document.getElementById("frontPnl").textContent = (totalPnl >= 0 ? "+$" : "-$") + Math.abs(totalPnl).toFixed(2);
+    updateChart(trades);
+    const ledger = document.getElementById("ledger");
+    if (!trades.length) {
+      ledger.textContent = "No app-tracked trades yet.";
+    } else {
+      ledger.innerHTML = trades.slice(-10).reverse().map(trade => {
+        const pnl = Number(trade.pnl || 0);
+        const color = pnl > 0 ? "#22c55e" : pnl < 0 ? "#ef4444" : "#94a3b8";
+        const tradeText = String(trade.trade || "");
+        const marketMatch = tradeText.match(/[A-Z]+\/USD/);
+        const market = trade.pair || trade.ticker || (marketMatch ? marketMatch[0] : "PAIR");
+        const side = trade.side || trade.vote || (tradeText.includes(" buy ") ? "BUY" : tradeText.includes(" sell ") ? "SELL" : "TRADE");
+        return `<div class="ledger-row"><div><b class="mono">${esc(market)}</b><div class="mini-label">${esc(side)} ${esc(trade.ts || "")}</div><div class="mono" style="font-size:11px;color:#64748b;margin-top:4px;">${esc(trade.trade || "")}</div></div><div class="mono" style="color:${color};font-weight:800;">${pnl >= 0 ? "+" : ""}${pnl.toFixed(2)} USD</div></div>`;
+      }).join("");
+    }
+    if (data.identity) {
+      const addr = data.identity.agentAddress || "Unavailable";
+      document.getElementById("idCard").innerHTML = `${esc(addr)}\n\nBasescan: https://sepolia.basescan.org/address/${esc(addr)}`;
+    }
+    document.getElementById("rulesBlock").textContent = JSON.stringify(data.active_rules || {}, null, 2);
+    if (data.flight_log && data.flight_log.length) renderFlight(data.flight_log);
+  } catch (err) {
+    console.warn(err);
+  }
+}
+
+function initMicrophoneState() {
+  if (!canUseMicrophone()) {
+    document.getElementById("recordBtn").classList.add("disabled");
+    document.getElementById("recordHint").textContent = "Use upload on HTTP";
+    document.getElementById("micNotice").textContent = microphoneUnavailableMessage();
+  }
+}
+
+const initialView = (location.hash || "#trade").replace("#", "");
+initChart();
+initMicrophoneState();
+showView(["trade", "proof", "portfolio", "security", "system"].includes(initialView) ? initialView : "trade");
+loadState();
+setInterval(loadState, 15000);
+</script>
+</body>
+</html>

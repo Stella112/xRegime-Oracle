@@ -9,3 +9,4 @@ python-dotenv
 yfinance
 audio-recorder-streamlit
 eth-account
+httpx
