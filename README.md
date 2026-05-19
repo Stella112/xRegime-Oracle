@@ -1,125 +1,146 @@
 # xRegime Oracle
 
-Autonomous crypto trading agent for the AI Agent Olympics.
+## Autonomous Voice-to-Trade Crypto Agent
 
-xRegime Oracle turns a written or spoken crypto market brief into a transparent Kraken paper-trading decision. It uses Speechmatics for voice transcription, a Featherless multi-model finance ensemble for reasoning, a dynamic Regime Score for adaptive risk control, and a replayable proof trail for every decision.
+xRegime Oracle is a voice-first autonomous trading agent that converts crypto market briefs into transparent Kraken paper trades. It combines Speechmatics transcription, a Featherless multi-model finance ensemble, a dynamic Regime Score, Kraken CLI execution, and a visible security layer so every decision is explainable, replayable, and safe for demo use.
 
-## What It Does
+## The Problem
 
-xRegime Oracle is designed as a voice-first, safety-first trading agent:
+Trading agents are powerful, but most of them fail the trust test.
 
-1. The user enters a crypto market update by text, sample prompt, or uploaded audio.
-2. Speechmatics transcribes uploaded voice notes into text.
-3. Featherless models extract market signals and vote independently.
-4. A risk judge checks confidence, Regime Score, and active rules.
-5. Approved trades execute through Kraken CLI paper trading.
-6. Every step is displayed in a forensic proof trail.
-7. The Nightly Reflector can update risk rules based on recent outcomes.
+They often:
 
-The app currently supports Kraken crypto paper pairs:
+- Act like black boxes.
+- Give trade recommendations without showing why.
+- Depend on one model response.
+- Mix analysis and execution without clear guardrails.
+- Hide risk decisions from the user.
+- Have no clear audit trail after a trade.
 
-`BTC`, `ETH`, `SOL`, `XRP`, `ADA`, `DOGE`, `LTC`, `DOT`, `AVAX`, `LINK`
+For a financial agent, that is not enough. Users and judges need to see what the agent heard, what it believed, how confident it was, what risk rules were applied, and exactly what command was sent or blocked.
 
-## Core Workflow
+## The Solution
+
+xRegime Oracle turns the trading-agent workflow into a transparent cockpit.
+
+The user gives a market brief by text or voice upload. The agent transcribes the input, extracts trading signals, sends the signal through a multi-model courtroom, checks dynamic risk rules, passes through visible security guardrails, and only then sends a tiny Kraken paper trade.
+
+Every run creates a proof trail:
 
 ```text
-Text / Voice Input
-  -> Speechmatics Transcription
-  -> Signal Extraction
-  -> Featherless 3-Model Courtroom
-  -> Regime Risk Judge
-  -> Security / Safety Guardrails
-  -> Kraken CLI Paper Execution
-  -> Proof Trail + Portfolio Ledger
+Input
+-> Signal Extraction
+-> Model Courtroom
+-> Regime Risk Judge
+-> Security Layer
+-> Kraken Paper Execution
+-> Proof Trail + Portfolio Ledger
 ```
 
-## Current Dashboard
+The result is not just "BUY" or "SELL." It is a complete explanation of the agent's decision.
 
-The live dashboard has been reorganized into simple numbered views:
+## One-Line Pitch
+
+xRegime Oracle is a self-evolving, voice-first crypto trading agent that makes AI trading decisions auditable from transcript to Kraken paper execution.
+
+## Why This Wins
+
+xRegime Oracle is built around four judge-friendly ideas:
+
+1. **Real execution layer**
+   The agent does not stop at advice. Approved trades are sent through Kraken CLI paper trading, with visible commands and PnL tracking.
+
+2. **Voice-first interaction**
+   Users can upload spoken market briefs. Speechmatics transcribes the audio and sends it directly into the trading workflow.
+
+3. **Domain-specialized intelligence**
+   A Featherless-hosted finance ensemble votes independently before a trade can continue.
+
+4. **Self-improvement loop**
+   A dynamic Regime Score and Nightly Reflector update the agent's risk posture based on recent outcomes.
+
+## Current Product Experience
+
+The dashboard is organized into five simple numbered views.
 
 ### 1. Trade
 
-Main user entry point.
+The main cockpit.
 
-- Load BTC sample
-- Paste a crypto market brief
-- Upload a voice file for Speechmatics transcription
-- View front-page Regime Score, Paper PnL, trade count, and win rate
-- See a plain-English live verdict
+- Paste a crypto market brief.
+- Load a BTC sample.
+- Upload a voice file for Speechmatics transcription.
+- See the live verdict in plain English.
+- View front-page Regime Score, Paper PnL, trade count, and win rate.
 
-Live microphone recording is prepared in the UI, but browsers block `getUserMedia` on public HTTP IP addresses. Until HTTPS is enabled, voice upload is the reliable voice path.
+Live browser microphone support requires HTTPS on a public IP. Until HTTPS is enabled, voice upload is the reliable voice path.
 
 ### 2. Proof
 
-Replayable decision timeline.
+The audit trail.
+
+Shows:
 
 - Input captured
 - Signals extracted
 - Model votes and confidence
-- Consensus result
+- Final consensus
 - Risk judge verdict
 - Kraken command or `NO_ACTION`
 
-This is the audit view that explains exactly why the agent traded or refused to trade.
+This page answers the most important question: "Why did the agent do that?"
 
 ### 3. Portfolio
 
-Paper trading performance view.
+The paper performance view.
+
+Shows:
 
 - Regime Score
 - Win rate
 - Trade count
 - Latest PnL
-- Equity chart
+- Equity curve
 - Recent trade ledger
 
 ### 4. Security
 
-Visible safety layer for trading-agent trust.
+The visible safety layer.
+
+Shows:
 
 - Paper trading only
 - Crypto asset allowlist
-- Tiny preset paper order sizes
+- Tiny preset order sizes
 - Model consensus gate
 - Regime risk gate
 - Replayable audit trail
 
-Recommended next backend upgrade: add a hard execution safety gate that rejects non-paper Kraken commands, unsupported pairs, prompt-injection phrases, and trades inside a cooldown window.
+This page makes the guardrails obvious before users or judges ask about them.
 
 ### 5. System
 
-Operational controls and identity.
+The operating panel.
 
-- Run Nightly Reflector
-- View ERC-8004-style wallet identity
-- Inspect active dynamic risk rules
+Shows:
 
-## Sponsor Alignment
+- Nightly Reflector control
+- Agent identity
+- Active dynamic risk rules
 
-| Sponsor / Track | Implementation |
-| --- | --- |
-| Featherless AI | Multi-model finance ensemble and Nightly Reflector |
-| Speechmatics | Voice upload transcription into trading workflow |
-| Kraken | CLI-based paper execution layer |
-| Base / Ethereum | Agent wallet identity and onchain-style profile |
+## Supported Markets
 
-## Key Features
+xRegime Oracle currently focuses on Kraken crypto paper markets:
 
-### Featherless 3-Model Courtroom
+```text
+BTC, ETH, SOL, XRP, ADA, DOGE, LTC, DOT, AVAX, LINK
+```
 
-The agent does not allow one model to act alone. Multiple Featherless-hosted models vote `BUY`, `SELL`, or `HOLD`, and the app displays each vote with confidence. A consensus is required before the trade reaches risk review.
+The app intentionally avoids unsupported xStocks in the live demo because Kraken CLI paper execution reliably supports crypto pairs.
 
-### Dynamic Regime Score
+## Execution Layer
 
-The Regime Score is a 0-100 risk posture derived from recent trade outcomes. Lower scores make the agent more conservative. Higher scores allow more confidence in stronger signals.
-
-### Nightly Reflector
-
-The Nightly Reflector reviews recent performance and updates `agent/dynamic_config.json`. This is the self-improvement loop: the agent does not retrain models, but it adapts its risk rules based on outcomes.
-
-### Kraken Paper Execution
-
-Approved trades are sent through Kraken CLI in paper mode with tiny preset crypto order sizes. The exact command is shown in the proof trail.
+Approved trades are executed through Kraken CLI in paper mode.
 
 Example:
 
@@ -127,29 +148,172 @@ Example:
 /root/.cargo/bin/kraken paper buy BTC/USD 0.0001
 ```
 
-### Voice-First Interaction
+The exact command is shown in the Proof view. If the model vote or risk rules block the trade, the command becomes `NO_ACTION`.
 
-Audio uploads are transcribed by Speechmatics and automatically passed into the trading workflow. Browser live microphone support requires HTTPS on a public IP, so the current deployed version uses upload as the reliable voice path.
+## Security and Safety Layer
+
+xRegime Oracle is designed to make safety visible.
+
+Current visible guardrails:
+
+- Paper trading mode only
+- Supported crypto pair allowlist
+- Tiny preset order sizes
+- Multi-model consensus required
+- Regime risk gate can block trades
+- Full proof trail for every decision
+
+Recommended backend hardening:
+
+- Reject any non-paper Kraken command before subprocess execution.
+- Block prompt-injection phrases like "ignore rules" or "trade live."
+- Enforce a trade cooldown, for example one trade every five minutes.
+- Require user confirmation before execution.
+- Log every blocked command to an audit file.
+
+## Dynamic Regime Score
+
+The Regime Score is the agent's adaptive risk posture.
+
+- High score: recent outcomes are stronger, so the agent can accept more risk.
+- Low score: recent outcomes are weaker, so the agent becomes more conservative.
+
+The score is recalculated from recent trade outcomes and displayed on the front page and Portfolio view.
+
+## Nightly Reflector
+
+The Nightly Reflector is the self-improvement loop.
+
+It reviews:
+
+- Recent trades
+- Current Regime Score
+- Active dynamic rules
+
+Then it proposes updates to `agent/dynamic_config.json`.
+
+The agent does not retrain models. Instead, it evolves its risk rules based on observed outcomes.
+
+## Sponsor Alignment
+
+| Sponsor / Track | How xRegime Oracle Uses It |
+| --- | --- |
+| Featherless AI | Multi-model finance ensemble, signal extraction, and Nightly Reflector |
+| Speechmatics | Voice upload transcription for spoken market briefs |
+| Kraken | CLI-based paper trading execution layer |
+| Base / Ethereum | Agent wallet identity and ERC-8004-style profile |
+
+## Contracts / Onchain Identity
+
+xRegime Oracle includes an agent identity layer in:
+
+```text
+agent/erc8004_identity.json
+agent/wallet.py
+```
+
+This identity profile represents the agent's wallet address, capabilities, model ensemble, and reputation source.
+
+Current state:
+
+- The app generates and stores an agent wallet identity.
+- The dashboard links the identity to Basescan.
+- The identity is structured around the ERC-8004 Trustless Agents concept.
+
+Important note:
+
+This repository currently does not include a deployed Solidity smart contract. The onchain component is an identity/profile layer, not a full contract system. A future version can add a registry contract for agent reputation, decision hashes, and audit proofs.
+
+## Architecture
+
+```text
+Frontend
+  static/index.html
+  Numbered dashboard views: Trade, Proof, Portfolio, Security, System
+
+Backend
+  api.py
+  FastAPI routes for state, execution, transcription, and reflection
+
+Agent Core
+  agent/workflow.py
+  LangGraph trading and reflection workflows
+
+Tools
+  agent/tools.py
+  Featherless, Speechmatics, Kraken CLI, config, and execution helpers
+
+State
+  agent/state.py
+  Shared agent state schema
+
+Prompts
+  agent/prompts.py
+  Signal extraction, model voting, and reflection prompts
+
+Identity
+  agent/wallet.py
+  agent/erc8004_identity.json
+```
+
+## Technical Workflow
+
+```text
+1. User submits text or audio
+2. Audio is transcribed with Speechmatics
+3. Featherless extracts tickers, sentiment, and summary
+4. Three Featherless models vote BUY / SELL / HOLD
+5. Consensus is calculated
+6. Risk judge checks Regime Score and dynamic config
+7. Security layer communicates guardrails
+8. Kraken CLI paper command executes or is blocked
+9. Proof trail and portfolio state update
+10. Nightly Reflector can evolve risk rules
+```
+
+## Demo Flow
+
+1. Open the app.
+2. Start on `1 Trade`.
+3. Load the BTC sample or upload a voice file.
+4. Click `Analyze and Execute`.
+5. Move to `2 Proof` to show the full decision path.
+6. Open `3 Portfolio` to show PnL and ledger.
+7. Open `4 Security` to show guardrails.
+8. Open `5 System` to show identity and dynamic rules.
+
+## Tech Stack
+
+| Layer | Technology |
+| --- | --- |
+| Backend | FastAPI |
+| Agent workflow | LangGraph |
+| Frontend | Static HTML, CSS, JavaScript |
+| Charts | Chart.js |
+| AI reasoning | Featherless API |
+| Voice transcription | Speechmatics API |
+| Trading execution | Kraken CLI |
+| Identity | Ethereum wallet / ERC-8004-style profile |
 
 ## Project Structure
 
 ```text
 xRegime-Oracle/
-├── api.py                      # FastAPI backend for state, execution, transcription, reflection
-├── static/
-│   └── index.html              # Production dashboard UI
-├── app.py                      # Streamlit dashboard variant
-├── agent/
-│   ├── workflow.py             # LangGraph execution and reflection workflows
-│   ├── state.py                # Shared state schema
-│   ├── tools.py                # Featherless, Speechmatics, Kraken helpers
-│   ├── prompts.py              # Prompt templates
-│   ├── wallet.py               # Agent wallet / identity helpers
-│   ├── dynamic_config.json     # Adaptive risk rules
-│   └── erc8004_identity.json   # Agent identity profile
-├── requirements.txt
-├── Dockerfile
-└── docker-compose.yml
+|-- api.py
+|-- static/
+|   `-- index.html
+|-- app.py
+|-- agent/
+|   |-- workflow.py
+|   |-- state.py
+|   |-- tools.py
+|   |-- prompts.py
+|   |-- wallet.py
+|   |-- dynamic_config.json
+|   `-- erc8004_identity.json
+|-- requirements.txt
+|-- Dockerfile
+`-- docker-compose.yml
 ```
 
 ## Environment Variables
@@ -163,7 +327,7 @@ KRAKEN_API_KEY=...
 KRAKEN_API_SECRET=...
 ```
 
-`FEATHERLESS_API_KEY` and `SPEECHMATICS_API_KEY` are required for full functionality. Kraken keys are only needed if configuring real Kraken access; the demo is designed around paper trading.
+`FEATHERLESS_API_KEY` and `SPEECHMATICS_API_KEY` are required for the full demo. Kraken credentials are optional for paper/demo operation depending on local Kraken CLI setup.
 
 ## Running Locally
 
@@ -179,7 +343,7 @@ Run the FastAPI app:
 uvicorn api:app --host 0.0.0.0 --port 8501
 ```
 
-Then open:
+Open:
 
 ```text
 http://127.0.0.1:8501
@@ -187,18 +351,32 @@ http://127.0.0.1:8501
 
 ## Recent Changes
 
-- Rebuilt the live UI as a FastAPI + static dashboard.
-- Reorganized the app into numbered views: Trade, Proof, Portfolio, Security, System.
+- Rebuilt the live UI as a FastAPI plus static dashboard.
+- Added numbered app navigation: Trade, Proof, Portfolio, Security, System.
 - Added front-page Regime Score, Paper PnL, trade count, and win rate.
-- Added a visible Security layer page for paper-mode and risk guardrails.
-- Switched the trading surface from xStocks to supported Kraken crypto pairs.
-- Added safer tiny order sizes for Kraken paper trades.
-- Improved Featherless retry handling for concurrency/rate-limit errors.
-- Added Speechmatics voice-upload flow.
-- Added clear HTTPS notice for browser microphone recording.
-- Improved proof trail and ledger readability.
-- Added dynamic config normalization and safer path handling.
+- Added a dedicated Security page for visible guardrails.
+- Switched the execution demo from xStocks to supported Kraken crypto pairs.
+- Added tiny preset Kraken paper order sizes.
+- Added Speechmatics voice upload flow.
+- Added clear HTTPS notice for live microphone recording.
+- Improved proof trail and portfolio ledger.
+- Improved Featherless retry handling for concurrency and rate-limit errors.
+- Updated README into a full project pitch.
 
-## Demo Summary
+## Roadmap
 
-xRegime Oracle is not just a bot that says "BUY" or "SELL." It is an autonomous trading agent with visible reasoning, risk controls, paper execution, adaptive rules, and a clear audit trail. The goal is to make every trading decision understandable, replayable, and safe for demo use.
+- Add HTTPS so browser live microphone recording works on the public deployment.
+- Add a backend hard safety gate before Kraken subprocess execution.
+- Add trade confirmation before paper execution.
+- Add cooldown and rate limiting.
+- Add prompt-injection detection.
+- Add onchain decision hash registry.
+- Add downloadable audit reports.
+
+## Closing Pitch
+
+xRegime Oracle is not a generic chatbot and not a simple trading dashboard.
+
+It is a full autonomous trading-agent cockpit: voice input, model consensus, adaptive risk, paper execution, proof trail, security layer, and portfolio tracking in one flow.
+
+The goal is simple: make AI trading decisions understandable enough to trust and structured enough to audit.
