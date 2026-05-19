@@ -313,7 +313,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
     <div class="brand-mark">XO</div>
     <div>
       <div>xRegime Oracle</div>
-      <div class="mini-label">Kraken crypto paper console</div>
+      <div class="mini-label">xStock thesis / crypto paper demo</div>
     </div>
   </div>
   <nav class="nav-actions">
@@ -336,7 +336,8 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
           <p>Start with text, an uploaded voice note, or live mic when HTTPS is enabled. xRegime shows the verdict here, then stores the detailed proof in its own page.</p>
         </div>
         <div class="chip-row">
-          <span class="chip">Crypto only</span>
+          <span class="chip">xStock thesis</span>
+          <span class="chip">Crypto paper fallback</span>
           <span class="chip">Paper trading</span>
           <span class="chip">2-of-3 model consensus</span>
           <span class="chip">Risk-gated</span>
@@ -346,7 +347,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
         <div>
           <div class="kicker">Live verdict</div>
           <div class="verdict-title" id="verdictTitle">Ready to analyze</div>
-          <div class="verdict-copy" id="verdictCopy">Use sample, upload audio, or paste a crypto update. Results stay simple here; details live under Proof.</div>
+          <div class="verdict-copy" id="verdictCopy">Use sample, upload audio, or paste a market update. The product targets xStocks; the live paper demo executes supported crypto pairs.</div>
         </div>
         <div class="verdict-status">
           <div><div class="mini-label">Consensus</div><div class="mini-value" id="consensusMini">Waiting</div></div>
@@ -382,7 +383,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
       <div class="step-card"><div class="mini-label">Step 1</div><b>Give brief</b><span>Text, sample, or uploaded voice.</span></div>
       <div class="step-card"><div class="mini-label">Step 2</div><b>Models vote</b><span>Consensus must form before action.</span></div>
       <div class="step-card"><div class="mini-label">Step 3</div><b>Risk gate</b><span>Dynamic rules approve or block.</span></div>
-      <div class="step-card"><div class="mini-label">Step 4</div><b>Paper order</b><span>Kraken receives tiny crypto trades.</span></div>
+      <div class="step-card"><div class="mini-label">Step 4</div><b>Paper order</b><span>Kraken receives tiny crypto demo trades.</span></div>
     </div>
 
     <div class="trade-grid">
@@ -395,7 +396,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
           </div>
         </div>
         <div class="mode-grid">
-          <button class="mode active" onclick="focusBrief()"><strong>Type</strong><span>Paste a crypto update</span></button>
+          <button class="mode active" onclick="focusBrief()"><strong>Type</strong><span>Paste a market update</span></button>
           <button class="mode" id="recordBtn" onclick="toggleRecording()"><strong>Live mic</strong><span id="recordHint">Needs HTTPS on this IP</span></button>
           <label class="mode" for="voiceUpload"><strong>Upload voice</strong><span>WAV, MP3, M4A, WEBM</span></label>
         </div>
@@ -496,8 +497,8 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
         </div>
         <div class="security-card">
           <div class="mini-label security-ok">Asset allowlist</div>
-          <strong>Crypto pairs only</strong>
-          <span>Supported markets are BTC, ETH, SOL, XRP, ADA, DOGE, LTC, DOT, AVAX, and LINK.</span>
+          <strong>xStock thesis, crypto fallback</strong>
+          <span>The target product is xStocks. The live paper demo uses BTC, ETH, SOL, XRP, ADA, DOGE, LTC, DOT, AVAX, and LINK because xStocks did not work in Kraken paper mode.</span>
         </div>
         <div class="security-card">
           <div class="mini-label security-ok">Order sizing</div>
@@ -532,7 +533,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
         </div>
         <button class="secondary-btn" onclick="runReflector()">Run Nightly Reflector</button>
         <button class="secondary-btn" onclick="toggleId()" style="margin-left:8px;">Toggle Agent Identity</button>
-        <div class="notice">Reflector can update dynamic risk rules. It does not change the crypto-only Kraken paper mode.</div>
+        <div class="notice">Reflector can update dynamic risk rules. It does not change the current Kraken crypto paper fallback used for the demo.</div>
         <div id="idCard" class="code-block mono" style="display:none;margin-top:12px;">Loading wallet...</div>
       </div>
       <div class="panel">
@@ -570,7 +571,7 @@ function focusBrief() {
 
 function useSample() {
   document.getElementById("brief").value = SAMPLE;
-  setVerdict("Sample loaded", "Review it, then run analysis. This sample is BTC-only and safe for Kraken crypto paper mode.", "Waiting", "No order sent", "hold");
+  setVerdict("Sample loaded", "Review it, then run analysis. This sample is BTC-only because the live demo uses Kraken crypto paper mode while xStock paper execution is unavailable.", "Waiting", "No order sent", "hold");
   updatePreview("Sample loaded", "BTC sample is ready in the command box.");
 }
 
@@ -751,7 +752,7 @@ function renderEvent(event) {
 async function runAgent() {
   const text = document.getElementById("brief").value.trim();
   if (!text) {
-    setVerdict("Add a brief first", "Use the sample, upload audio, or type a crypto market update.", "No vote", "No order sent", "warn");
+    setVerdict("Add a brief first", "Use the sample, upload audio, or type a market update.", "No vote", "No order sent", "warn");
     document.getElementById("brief").focus();
     return;
   }

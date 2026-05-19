@@ -1,8 +1,10 @@
 # xRegime Oracle
 
-## Autonomous Voice-to-Trade Crypto Agent
+## Autonomous Voice-to-Trade xStock Agent
 
-xRegime Oracle is a voice-first autonomous trading agent that converts crypto market briefs into transparent Kraken paper trades. It combines Speechmatics transcription, a Featherless multi-model finance ensemble, a dynamic Regime Score, Kraken CLI execution, and a visible security layer so every decision is explainable, replayable, and safe for demo use.
+xRegime Oracle is a voice-first autonomous trading agent built for tokenized equities and xStocks. It converts spoken or written market briefs into transparent, risk-gated trading decisions using Speechmatics transcription, a Featherless multi-model finance ensemble, a dynamic Regime Score, Kraken CLI execution, and a visible security layer.
+
+The live demo currently executes Kraken crypto paper trades because Kraken paper mode did not support the xStock pairs we tested. Crypto is the paper-execution fallback; xStocks remain the product thesis.
 
 ## The Problem
 
@@ -21,9 +23,11 @@ For a financial agent, that is not enough. Users and judges need to see what the
 
 ## The Solution
 
-xRegime Oracle turns the trading-agent workflow into a transparent cockpit.
+xRegime Oracle turns the xStock trading-agent workflow into a transparent cockpit.
 
-The user gives a market brief by text or voice upload. The agent transcribes the input, extracts trading signals, sends the signal through a multi-model courtroom, checks dynamic risk rules, passes through visible security guardrails, and only then sends a tiny Kraken paper trade.
+The user gives a market brief by text or voice upload. The agent transcribes the input, extracts trading signals, sends the signal through a multi-model courtroom, checks dynamic risk rules, passes through visible security guardrails, and only then prepares execution.
+
+In the intended production path, this execution layer targets Kraken xStocks/tokenized equities. In the current paper demo, the same execution pattern is demonstrated with supported Kraken crypto pairs because xStocks were unavailable in paper mode.
 
 Every run creates a proof trail:
 
@@ -41,14 +45,14 @@ The result is not just "BUY" or "SELL." It is a complete explanation of the agen
 
 ## One-Line Pitch
 
-xRegime Oracle is a self-evolving, voice-first crypto trading agent that makes AI trading decisions auditable from transcript to Kraken paper execution.
+xRegime Oracle is a self-evolving, voice-first xStock trading agent that makes AI trading decisions auditable from transcript to Kraken execution.
 
 ## Why This Wins
 
 xRegime Oracle is built around four judge-friendly ideas:
 
 1. **Real execution layer**
-   The agent does not stop at advice. Approved trades are sent through Kraken CLI paper trading, with visible commands and PnL tracking.
+   The agent does not stop at advice. Approved trades pass into a Kraken CLI execution layer, with visible commands and PnL tracking. The demo uses crypto paper pairs because xStocks did not work in Kraken paper mode.
 
 2. **Voice-first interaction**
    Users can upload spoken market briefs. Speechmatics transcribes the audio and sends it directly into the trading workflow.
@@ -67,7 +71,7 @@ The dashboard is organized into five simple numbered views.
 
 The main cockpit.
 
-- Paste a crypto market brief.
+- Paste an xStock, equity, or crypto market brief.
 - Load a BTC sample.
 - Upload a voice file for Speechmatics transcription.
 - See the live verdict in plain English.
@@ -128,19 +132,25 @@ Shows:
 - Agent identity
 - Active dynamic risk rules
 
-## Supported Markets
+## Supported Markets and Demo Fallback
 
-xRegime Oracle currently focuses on Kraken crypto paper markets:
+xRegime Oracle was designed around xStocks/tokenized equity trading. During testing, Kraken CLI paper mode did not accept the xStock pairs, so the live demo uses supported Kraken crypto paper markets to prove the execution layer safely.
+
+Demo execution allowlist:
 
 ```text
 BTC, ETH, SOL, XRP, ADA, DOGE, LTC, DOT, AVAX, LINK
 ```
 
-The app intentionally avoids unsupported xStocks in the live demo because Kraken CLI paper execution reliably supports crypto pairs.
+This means:
+
+- **Product thesis:** autonomous xStock/tokenized equity agent.
+- **Live paper demo:** crypto pairs, because they work reliably in Kraken paper mode.
+- **Execution layer:** same Kraken CLI pattern, visible command, PnL tracking, and proof trail.
 
 ## Execution Layer
 
-Approved trades are executed through Kraken CLI in paper mode.
+Approved demo trades are executed through Kraken CLI in paper mode.
 
 Example:
 
@@ -157,7 +167,7 @@ xRegime Oracle is designed to make safety visible.
 Current visible guardrails:
 
 - Paper trading mode only
-- Supported crypto pair allowlist
+- Supported demo pair allowlist
 - Tiny preset order sizes
 - Multi-model consensus required
 - Regime risk gate can block trades
@@ -200,7 +210,7 @@ The agent does not retrain models. Instead, it evolves its risk rules based on o
 | --- | --- |
 | Featherless AI | Multi-model finance ensemble, signal extraction, and Nightly Reflector |
 | Speechmatics | Voice upload transcription for spoken market briefs |
-| Kraken | CLI-based paper trading execution layer |
+| Kraken | CLI-based xStock execution thesis, demonstrated with crypto paper trading fallback |
 | Base / Ethereum | Agent wallet identity and ERC-8004-style profile |
 
 ## Contracts / Onchain Identity
@@ -266,7 +276,7 @@ Identity
 5. Consensus is calculated
 6. Risk judge checks Regime Score and dynamic config
 7. Security layer communicates guardrails
-8. Kraken CLI paper command executes or is blocked
+8. Kraken CLI command executes or is blocked
 9. Proof trail and portfolio state update
 10. Nightly Reflector can evolve risk rules
 ```
@@ -355,7 +365,7 @@ http://127.0.0.1:8501
 - Added numbered app navigation: Trade, Proof, Portfolio, Security, System.
 - Added front-page Regime Score, Paper PnL, trade count, and win rate.
 - Added a dedicated Security page for visible guardrails.
-- Switched the execution demo from xStocks to supported Kraken crypto pairs.
+- Kept the xStock product thesis while switching the live paper demo to supported Kraken crypto pairs because xStocks did not work in paper mode.
 - Added tiny preset Kraken paper order sizes.
 - Added Speechmatics voice upload flow.
 - Added clear HTTPS notice for live microphone recording.
@@ -366,6 +376,7 @@ http://127.0.0.1:8501
 ## Roadmap
 
 - Add HTTPS so browser live microphone recording works on the public deployment.
+- Restore xStock execution when Kraken paper/live support is available for the desired xStock pairs.
 - Add a backend hard safety gate before Kraken subprocess execution.
 - Add trade confirmation before paper execution.
 - Add cooldown and rate limiting.
