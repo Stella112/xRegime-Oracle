@@ -188,6 +188,26 @@ textarea {
 }
 textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(20,184,166,.10); }
 .input-actions, .file-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.sample-btn {
+  border: 1px solid var(--line);
+  background: rgba(15,23,42,.70);
+  color: #dbeafe;
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 800;
+}
+.sample-btn:hover {
+  border-color: rgba(20,184,166,.55);
+  color: #ecfeff;
+}
 .primary-btn {
   border: 0;
   border-radius: 8px;
@@ -303,7 +323,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
 @media (max-width: 620px) {
   .shell { padding: 18px 12px 56px; }
   .hero-copy { padding: 20px; }
-  .mode-grid, .input-actions, .file-row, .vote-grid, .verdict-status, .front-metrics, .route-cards, .metrics { grid-template-columns: 1fr; }
+  .mode-grid, .input-actions, .file-row, .sample-grid, .vote-grid, .verdict-status, .front-metrics, .route-cards, .metrics { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -406,8 +426,16 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
           <span class="asset-chip">BTC</span><span class="asset-chip">ETH</span><span class="asset-chip">SOL</span><span class="asset-chip">XRP</span><span class="asset-chip">ADA</span>
           <span class="asset-chip">DOGE</span><span class="asset-chip">LTC</span><span class="asset-chip">DOT</span><span class="asset-chip">AVAX</span><span class="asset-chip">LINK</span>
         </div>
+        <div class="sample-grid" aria-label="Sample briefs">
+          <button class="sample-btn" onclick="useSample('btcBull')">BTC good news</button>
+          <button class="sample-btn" onclick="useSample('ethBull')">ETH upgrade news</button>
+          <button class="sample-btn" onclick="useSample('solBull')">SOL breakout</button>
+          <button class="sample-btn" onclick="useSample('xrpBear')">XRP bad news</button>
+          <button class="sample-btn" onclick="useSample('dogeNeutral')">DOGE mixed news</button>
+          <button class="sample-btn" onclick="useSample('linkBull')">LINK whale buying</button>
+        </div>
         <div class="input-actions">
-          <button class="secondary-btn" onclick="useSample()">Load BTC sample</button>
+          <button class="secondary-btn" onclick="clearBrief()">Clear box</button>
           <button class="primary-btn" id="runBtn" onclick="runAgent()">Analyze and Execute</button>
         </div>
         <div class="file-row">
@@ -547,7 +575,32 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
 </main>
 
 <script>
-const SAMPLE = "BTC broke above a key resistance level after ETF inflows accelerated. Momentum remains positive, volatility is elevated, and traders are watching whether spot demand can hold into the next session.";
+const SAMPLES = {
+  btcBull: {
+    title: "BTC good news",
+    text: "Bitcoin broke above resistance after strong ETF inflows. Momentum looks bullish and traders are watching if spot demand can keep pushing BTC higher."
+  },
+  ethBull: {
+    title: "ETH upgrade news",
+    text: "Ethereum is rising after a major network upgrade improved activity and reduced fees. Traders are bullish on ETH because staking demand and DeFi volume are growing."
+  },
+  solBull: {
+    title: "SOL breakout",
+    text: "Solana broke out after higher app usage and strong trading volume. Momentum is positive and buyers are watching if SOL can hold above the breakout level."
+  },
+  xrpBear: {
+    title: "XRP bad news",
+    text: "XRP is falling after weak volume and fresh regulatory worries. Sentiment is bearish and traders are reducing risk while support levels are being tested."
+  },
+  dogeNeutral: {
+    title: "DOGE mixed news",
+    text: "Dogecoin is moving sideways. Social activity is high, but price momentum is weak. Traders are waiting for a clear breakout before taking a strong DOGE position."
+  },
+  linkBull: {
+    title: "LINK whale buying",
+    text: "Chainlink is gaining after large wallet accumulation and stronger oracle demand. LINK momentum is bullish, and traders are watching for a move above resistance."
+  }
+};
 let chart = null;
 let mediaRecorder = null;
 let recordedChunks = [];
@@ -569,10 +622,17 @@ function focusBrief() {
   document.getElementById("brief").focus();
 }
 
-function useSample() {
-  document.getElementById("brief").value = SAMPLE;
-  setVerdict("Sample loaded", "Review it, then run analysis. This sample is BTC-only because the live demo uses Kraken crypto paper mode while xStock paper execution is unavailable.", "Waiting", "No order sent", "hold");
-  updatePreview("Sample loaded", "BTC sample is ready in the command box.");
+function useSample(name) {
+  const sample = SAMPLES[name] || SAMPLES.btcBull;
+  document.getElementById("brief").value = sample.text;
+  setVerdict("Sample loaded", sample.title + " is ready. Click Analyze and Execute.", "Waiting", "No order sent", "hold");
+  updatePreview("Sample loaded", sample.title + " is ready in the command box.");
+}
+
+function clearBrief() {
+  document.getElementById("brief").value = "";
+  setVerdict("Ready to analyze", "Pick a sample, upload audio, or type a short market update.", "Waiting", "No order sent", "hold");
+  updatePreview("Text box cleared", "Choose a sample brief or upload a voice file.");
 }
 
 function toggleId() {
