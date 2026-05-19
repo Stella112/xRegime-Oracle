@@ -94,6 +94,79 @@ button { cursor: pointer; }
 .view { display: none; }
 .view.active { display: block; animation: rise .22s ease; }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.landing {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr);
+  gap: 18px;
+  align-items: stretch;
+}
+.landing-copy {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(15,23,42,.80);
+  padding: 30px;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 18px 60px rgba(0,0,0,.24);
+}
+.landing-copy p {
+  color: #cbd5e1;
+  line-height: 1.62;
+  max-width: 720px;
+}
+.landing-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.product-shot {
+  border: 1px solid rgba(20,184,166,.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,.96), rgba(2,6,23,.92));
+  padding: 16px;
+  min-height: 520px;
+  box-shadow: 0 18px 70px rgba(20,184,166,.10);
+}
+.shot-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(148,163,184,.16);
+}
+.shot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 14px 0;
+}
+.shot-card {
+  border: 1px solid rgba(148,163,184,.16);
+  border-radius: 8px;
+  background: rgba(15,23,42,.70);
+  padding: 12px;
+}
+.shot-card strong {
+  display: block;
+  font-size: 20px;
+  margin-top: 5px;
+}
+.shot-timeline {
+  display: grid;
+  gap: 9px;
+}
+.shot-step {
+  border-left: 4px solid var(--teal);
+  border-radius: 8px;
+  background: rgba(15,23,42,.70);
+  padding: 12px;
+}
+.shot-step b { display: block; margin-bottom: 3px; }
+.shot-step span { color: #cbd5e1; font-size: 13px; }
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(320px, .85fr);
@@ -315,7 +388,7 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
 .security-warn { color: #fde68a; }
 .system-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 18px; }
 @media (max-width: 980px) {
-  .hero, .trade-grid, .section-grid, .security-grid, .system-grid { grid-template-columns: 1fr; }
+  .landing, .hero, .trade-grid, .section-grid, .security-grid, .system-grid { grid-template-columns: 1fr; }
   .front-metrics, .route-cards, .metrics { grid-template-columns: repeat(2, 1fr); }
   .topbar { align-items: start; flex-direction: column; }
   .nav-actions { justify-content: start; }
@@ -337,7 +410,8 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
     </div>
   </div>
   <nav class="nav-actions">
-    <button class="nav-link active" data-view-button="trade" onclick="showView('trade')"><span class="nav-number">1</span>Trade</button>
+    <button class="nav-link active" data-view-button="home" onclick="showView('home')">Home</button>
+    <button class="nav-link" data-view-button="trade" onclick="showView('trade')"><span class="nav-number">1</span>Trade</button>
     <button class="nav-link" data-view-button="proof" onclick="showView('proof')"><span class="nav-number">2</span>Proof</button>
     <button class="nav-link" data-view-button="portfolio" onclick="showView('portfolio')"><span class="nav-number">3</span>Portfolio</button>
     <button class="nav-link" data-view-button="security" onclick="showView('security')"><span class="nav-number">4</span>Security</button>
@@ -347,7 +421,54 @@ textarea:focus { border-color: rgba(20,184,166,.66); box-shadow: 0 0 0 3px rgba(
 </header>
 
 <main class="shell">
-  <section class="view active" id="view-trade">
+  <section class="view active" id="view-home">
+    <div class="landing">
+      <div class="landing-copy">
+        <div>
+          <div class="kicker">AI Agent Olympics Demo</div>
+          <h1>xStock trading agent with a safe paper demo.</h1>
+          <p>xRegime Oracle listens to a market brief, lets AI models vote, checks risk, and shows the full reason before any Kraken paper action. The product target is xStocks. The live demo uses crypto paper trades because xStocks did not work in Kraken paper mode.</p>
+          <div class="chip-row">
+            <span class="chip">Speechmatics voice</span>
+            <span class="chip">Featherless model vote</span>
+            <span class="chip">Kraken CLI paper</span>
+            <span class="chip">Security guardrails</span>
+          </div>
+          <div class="landing-actions">
+            <button class="primary-btn" onclick="showView('trade')">Start Demo</button>
+            <button class="secondary-btn" onclick="showView('proof')">See Proof Trail</button>
+            <button class="secondary-btn" onclick="showView('security')">View Safety</button>
+          </div>
+        </div>
+        <div class="front-metrics" aria-label="Landing performance metrics">
+          <div class="front-metric"><div class="mini-label">Regime</div><strong id="homeRegime">50.0</strong><span>risk score</span></div>
+          <div class="front-metric"><div class="mini-label">Paper PnL</div><strong id="homePnl">$0.00</strong><span>demo result</span></div>
+          <div class="front-metric"><div class="mini-label">Trades</div><strong id="homeTrades">0</strong><span>paper orders</span></div>
+          <div class="front-metric"><div class="mini-label">Win Rate</div><strong id="homeWin">N/A</strong><span>paper wins</span></div>
+        </div>
+      </div>
+      <div class="product-shot" aria-label="Product preview">
+        <div class="shot-top">
+          <div><div class="mini-label">Live Preview</div><strong>xRegime Decision Flow</strong></div>
+          <span class="dot"></span>
+        </div>
+        <div class="shot-grid">
+          <div class="shot-card"><div class="mini-label">Input</div><strong>Voice/Text</strong></div>
+          <div class="shot-card"><div class="mini-label">Verdict</div><strong>BUY / HOLD</strong></div>
+          <div class="shot-card"><div class="mini-label">Mode</div><strong>Paper only</strong></div>
+          <div class="shot-card"><div class="mini-label">Audit</div><strong>Replayable</strong></div>
+        </div>
+        <div class="shot-timeline">
+          <div class="shot-step"><b>1. Market brief</b><span>User uploads voice or picks a sample.</span></div>
+          <div class="shot-step"><b>2. Model courtroom</b><span>Featherless models vote independently.</span></div>
+          <div class="shot-step"><b>3. Risk judge</b><span>Regime Score can approve or block.</span></div>
+          <div class="shot-step"><b>4. Kraken paper action</b><span>Command is shown in the proof trail.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-trade">
     <div class="hero">
       <div class="hero-copy">
         <div>
@@ -909,16 +1030,20 @@ async function loadState() {
     const trades = data.trade_log || [];
     const score = Number(data.regime_score || 50);
     document.getElementById("navScore").textContent = score.toFixed(1);
+    document.getElementById("homeRegime").textContent = score.toFixed(1);
     document.getElementById("frontRegime").textContent = score.toFixed(1);
     document.getElementById("mRegime").textContent = score.toFixed(1);
     const winRateText = data.trade_count > 0 ? data.win_rate + "%" : "N/A";
     document.getElementById("mWin").textContent = winRateText;
+    document.getElementById("homeWin").textContent = winRateText;
     document.getElementById("frontWin").textContent = winRateText;
     document.getElementById("mTrades").textContent = data.trade_count || 0;
+    document.getElementById("homeTrades").textContent = data.trade_count || 0;
     document.getElementById("frontTrades").textContent = data.trade_count || 0;
     const last = trades.length ? Number(trades[trades.length - 1].pnl || 0) : 0;
     document.getElementById("mLast").textContent = (last >= 0 ? "+" : "") + last.toFixed(2);
     const totalPnl = trades.reduce((sum, trade) => sum + Number(trade.pnl || 0), 0);
+    document.getElementById("homePnl").textContent = (totalPnl >= 0 ? "+$" : "-$") + Math.abs(totalPnl).toFixed(2);
     document.getElementById("frontPnl").textContent = (totalPnl >= 0 ? "+$" : "-$") + Math.abs(totalPnl).toFixed(2);
     updateChart(trades);
     const ledger = document.getElementById("ledger");
@@ -954,10 +1079,10 @@ function initMicrophoneState() {
   }
 }
 
-const initialView = (location.hash || "#trade").replace("#", "");
+const initialView = (location.hash || "#home").replace("#", "");
 initChart();
 initMicrophoneState();
-showView(["trade", "proof", "portfolio", "security", "system"].includes(initialView) ? initialView : "trade");
+showView(["home", "trade", "proof", "portfolio", "security", "system"].includes(initialView) ? initialView : "home");
 loadState();
 setInterval(loadState, 15000);
 </script>
